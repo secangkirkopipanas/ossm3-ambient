@@ -18,7 +18,7 @@ Documentation on Openshift Service Mesh 3 with Ambient mode into OpenShift clust
    - Cluster Observability operator
 
 
-## Additional things if you want to adopt Gateway API in Amient mode to your cluster
+## Additional things if you want to adopt Gateway API in Amient mode to your cluster (optional)
 
    - [Gateway API](https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.1/standard-install.yaml)
       This Gateway API is required to be installed on OpenShift v4.17 and below.
@@ -28,7 +28,7 @@ Documentation on Openshift Service Mesh 3 with Ambient mode into OpenShift clust
 
 1. Install all required operators via OpenShift,
 
-2. Install all required additional things via OC CLI,
+2. Install additional things via OC CLI,
 
    ```bash
    # Install Gateway API in the cluster
