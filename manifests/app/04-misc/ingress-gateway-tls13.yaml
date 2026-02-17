@@ -1,0 +1,13 @@
+apiVersion: operator.openshift.io/v1
+kind: IngressController
+metadata:
+  name: webstore-ingress-tls13
+  namespace: openshift-ingress-operator
+spec:
+  domain: ossm3-ambient.apps.cluster-qm7sq.qm7sq.sandbox3406.opentlc.com
+  # Only watch the application namespace
+  namespaceSelector:
+    matchLabels:
+      kubernetes.io/metadata.name: webstore
+  tlsSecurityProfile:
+    type: Modern # Modern = TLS 1.3 strictly

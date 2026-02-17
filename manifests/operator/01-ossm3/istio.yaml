@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: istio-system
+  labels:
+    istio-discovery: enabled
+
+---
+apiVersion: sailoperator.io/v1
+kind: Istio
+metadata:
+  name: default
+spec:
+  namespace: istio-system
+  version: v1.24.3
+  telemetry:
+    enabled: true
+    prometheus:
+      enabled: true
+      replicaCount: 1
+      resources:
+        requests:
+          memory: 512Mi
+          cpu: 250m
+        limits:
+          memory: 1Gi
+          cpu: 500m
+  values:
+    pilot:
+      trustedZtunnelNamespace: ztunnel
+      autoscaleEnabled: true
+      autoscaleMin: 1
+      autoscaleMax: 5
+      cpu:
+        targetAverageUtilization: 70
+    profile: ambient
+    meshConfig:
+      discoverySelectors:
+        - matchLabels:
+            istio-discovery: enabled
+      enableTracing: true
+      accessLogFile: /dev/stdout
+  updateStrategy:
+    type: InPlace
+    inactiveRevisionDeletionGracePeriodSeconds: 30
+  
+---
+apiVersion: sailoperator.io/v1
+kind: Istio
+metadata:
+  name: default-sidecar
+spec:
+  namespace: istio-system
+  profile: openshift
+  updateStrategy:
+    inactiveRevisionDeletionGracePeriodSeconds: 30
+    type: InPlace
+  values:
+    meshConfig:
+      discoverySelectors:
+        - matchLabels:
+            istio-discovery: enabled
+      defaultConfig:
+        proxyMetadata:
+          ISTIO_META_ENABLE_HBONE: "true"
+          # Ambient requires DNS capture in many setups, enable it here.
+          ISTIO_META_DNS_CAPTURE: "true"
+          ISTIO_META_DNS_AUTO_ALLOCATE: "true"
+      outboundTrafficPolicy:
+        mode: ALLOW_ANY
+      enableTracing: true
+      accessLogFile: /dev/stdout
+    pilot:
+      autoscaleMax: 3
+      autoscaleMin: 1
+      cpu:
+        targetAverageUtilization: 80
+      memory:
+        targetAverageUtilization: 80
+  version: v1.26-latest

@@ -1,0 +1,35 @@
+#
+# Ambient mode
+#
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: external-gateway
+  namespace: istio-system
+spec:
+  gatewayClassName: istio
+  listeners:
+  - name: http
+    port: 80
+    protocol: HTTP
+    allowedRoutes:
+      namespaces:
+        from: All
+
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: mesh-external-ambient
+  namespace: istio-system
+spec:
+  host: ossm3-ambient.apps.cluster-qm7sq.qm7sq.sandbox3406.opentlc.com
+  to:
+    kind: Service
+    name: external-gateway-istio
+  port:
+    targetPort: 80
+  tls:
+    termination: edge

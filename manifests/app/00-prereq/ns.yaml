@@ -1,0 +1,10 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: webstore
+  # Labels needed for ambient dataplane mode
+  labels:
+    istio-discovery: enabled
+    istio.io/dataplane-mode: ambient
+    istio.io/use-waypoint: webstore-waypoint
+    ambient.istio.io/redirection: enabled

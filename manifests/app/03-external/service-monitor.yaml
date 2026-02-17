@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: webstore-waypoint-monitor
+  namespace: webstore
+spec:
+  selector:
+    matchLabels:
+      istio.io/waypoint-for: all
+  podTarget: true
+  endpoints:
+    - port: "15090"
+      path: /metrics
+      interval: 30s

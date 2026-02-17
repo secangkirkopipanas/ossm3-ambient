@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # Datastore
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+    networks:
+      - webstore-mesh
+
+  # Account Service
+  account-service:
+    build:
+      context: .
+      dockerfile: ./src/account/Dockerfile
+    environment:
+      - REDIS_HOST=redis
+    ports:
+      - "6001:6000"
+    networks:
+      - webstore-mesh
+    depends_on:
+      - redis
+
+  # Order Service
+  order-service:
+    build:
+      context: .
+      dockerfile: ./src/order/Dockerfile
+    environment:
+      - REDIS_HOST=redis
+    ports:
+      - "6002:6000"
+    networks:
+      - webstore-mesh
+    depends_on:
+      - redis
+
+  # Payment Service
+  payment-service:
+    build:
+      context: .
+      dockerfile: ./src/payment/Dockerfile
+    environment:
+      - REDIS_HOST=redis
+    ports:
+      - "6003:6000"
+    networks:
+      - webstore-mesh
+    depends_on:
+      - redis
+
+networks:
+  webstore-mesh:
+    driver: bridge

@@ -1,0 +1,59 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: istiocni-podmonitor
+  namespace: istio-system
+  labels:
+    app: webstore   # MUST match MonitoringStack selector
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: istio-cni
+  podMetricsEndpoints:
+    - port: metrics
+      path: /metrics
+      interval: 30s
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: ztunnel-monitor
+  namespace: ztunnel
+  labels:
+    # This label is often required for OpenShift Prometheus to pick it up
+    release: istio
+spec:
+  selector:
+    matchLabels:
+      app: ztunnel
+  namespaceSelector:
+    matchNames:
+      - ztunnel
+      - istio-system
+  podMetricsEndpoints:
+    - path: /stats/prometheus
+      port: ztunnel-stats # This is the named port for 15020 in ztunnel
+      interval: 15s
+      relabelings:
+        - action: replace
+          replacement: "ztunnel"
+          targetLabel: component
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: waypoint-podmonitor
+  namespace: webstore
+  labels:
+    app: webstore   # MUST match MonitoringStack selector
+spec:
+  selector:
+    matchLabels:
+      istio.io/waypoint-for: all
+  podMetricsEndpoints:
+    - port: metrics
+      path: /metrics
+      interval: 30s
+
