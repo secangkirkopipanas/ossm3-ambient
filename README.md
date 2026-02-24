@@ -5,9 +5,13 @@ Documentation on Openshift Service Mesh 3 with Ambient mode into OpenShift clust
 
 ## Version details
 
-   - **Istio**: v1.24.3
-   - **IstioCNI**: v1.27.3
-   - **Ztunnel**: v1.27.3
+   | **Item**                           | **Version**   |
+   | :--------------------------------- | :------------ |
+   | OpenShift Container Platform       | 4.18.6        |
+   | OpenShift Sevice Mesh operator     | 3.2.1         |
+   | Istio                              | 1.24.3        |
+   | IstioCNI                           | 1.27.3        |
+   | Ztunnel                            | 1.27.3        |
 
 
 ## Required operators
